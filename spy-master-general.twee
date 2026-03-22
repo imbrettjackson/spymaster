@@ -1,0 +1,489 @@
+:: StoryTitle
+The Spy-Master General is Coming to Dinner
+
+:: StoryData
+{
+  "ifid": "D674C58C-DEFA-4F70-B7A0-481A68C862C6",
+  "format": "Harlowe",
+  "format-version": "3.3.9",
+  "start": "START",
+  "zoom": 1
+}
+
+:: StoryMeta
+# GAME METADATA
+# Title: The Spy-Master General is Coming to Dinner
+# Platform: Twilio SMS
+# Character: THE SPYMASTER (one voice, one number)
+# Tone: Dry, theatrical, conspiratorial. Like a Le Carre novel directed by Wes Anderson.
+# Beat tags: [SMS] = plain text, [MMS] = media attached, [LINK] = URL in body, [CHOICE] = numbered options, [GATE] = waits for exact/keyword input
+
+---
+
+:: START [SMS]
+# TRIGGER: Player texts any message to the Spymaster number
+
+[SMS]
+An unknown number. How refreshing.
+I was told to expect someone. Are you the one they sent?
+
+Reply:
+1 - Yes, that's me
+2 - Wrong number
+3 - Who is this?
+
+[[1 -> CONFIRM_IDENTITY]]
+[[2 -> WRONG_NUMBER]]
+[[3 -> WHO_IS_THIS]]
+
+---
+
+:: WRONG_NUMBER [SMS]
+
+[SMS]
+A pity. I had such high hopes for this evening.
+
+If you change your mind, you know where to find me.
+
+[[restart -> START]]
+
+---
+
+:: WHO_IS_THIS [SMS]
+
+[SMS]
+Ha. Good instinct, asking first.
+
+I am the Spymaster General. I'm coming to dinner.
+And you -- apparently -- are hosting.
+
+Are you the one they sent?
+
+Reply:
+1 - Yes, that's me
+2 - I... think so?
+
+[[1 -> CONFIRM_IDENTITY]]
+[[2 -> CONFIRM_IDENTITY_UNCERTAIN]]
+
+---
+
+:: CONFIRM_IDENTITY_UNCERTAIN [SMS]
+
+[SMS]
+"You think so."
+
+Splendid. The Agency's vetting process continues to impress.
+
+No matter. Tonight's dinner depends on you.
+
+[[continue -> MISSION_BRIEF]]
+
+---
+
+:: CONFIRM_IDENTITY [SMS]
+
+[SMS]
+Good. Don't say my name aloud. Don't type it either -- not yet.
+
+I'm arriving at your location at 7 PM sharp.
+The problem: someone is already there.
+
+[[continue -> MISSION_BRIEF]]
+
+---
+
+:: MISSION_BRIEF [MMS + LINK]
+# ASSET: images/mission_map.jpg
+# LINK: Google Maps pin
+
+[MMS] images/mission_map.jpg
+[BODY]
+The person already inside goes by BLACKBIRD.
+They believe this is a routine dinner. It is not.
+
+Your task: confirm their identity before I arrive.
+
+📍 https://maps.google.com/?q=34.0522,-118.2437
+
+Text me when you're in position.
+
+Reply:
+1 - In position
+2 - Need more information
+3 - What does Blackbird look like?
+
+[[1 -> IN_POSITION]]
+[[2 -> MORE_INFO]]
+[[3 -> BLACKBIRD_DESCRIPTION]]
+
+---
+
+:: MORE_INFO [SMS]
+
+[SMS]
+You want more information. Naturally.
+
+The dinner was arranged three weeks ago by a mutual contact
+who has since -- how to put this -- become unavailable.
+
+Blackbird doesn't know that yet.
+
+Text READY when you want to proceed.
+
+[[READY -> IN_POSITION]]
+
+---
+
+:: BLACKBIRD_DESCRIPTION [SMS]
+
+[SMS]
+Observant. I like that.
+
+Blackbird will be at the bar.
+Ordering something with exactly two ice cubes.
+Reading a physical newspaper in the year of our lord.
+
+You'll know them.
+
+Text READY when you want to proceed.
+
+[[READY -> IN_POSITION]]
+
+---
+
+:: IN_POSITION [SMS + LINK]
+# GATE: EXACT match "EGRET" (case-insensitive)
+
+[SMS]
+Good. Before you approach Blackbird, you need the recognition phrase.
+
+I've encrypted it. Decode it here:
+🔐 https://imbrettjackson.github.io/spymaster/cipher.html
+
+Text me the decoded word when you have it.
+
+[[EGRET -> CORRECT_CODE]]
+[[* -> WRONG_CODE]]
+
+---
+
+:: WRONG_CODE [SMS + GATE]
+# Locked loop until player texts EGRET
+
+[SMS]
+That's not it. Try the cipher again.
+
+🔐 https://imbrettjackson.github.io/spymaster/cipher.html
+
+Text me the decoded word.
+
+[[EGRET -> CORRECT_CODE]]
+[[* -> WRONG_CODE]]
+
+---
+
+:: CORRECT_CODE [SMS]
+
+[SMS]
+EGRET. Correct.
+
+The recognition phrase is: "I heard the kitchen is closed."
+Blackbird will respond: "It opens again at midnight."
+
+If they don't say exactly that -- walk away.
+Do not look back.
+
+How do you want to approach?
+
+Reply:
+1 - Directly. Sit down next to them.
+2 - Casually. Order a drink first.
+3 - I need a moment.
+
+[[1 -> APPROACH_DIRECT]]
+[[2 -> APPROACH_CASUAL]]
+[[3 -> APPROACH_STALL]]
+
+---
+
+:: APPROACH_STALL [SMS]
+
+[SMS]
+Take your moment.
+
+The clock doesn't care, but I do --
+and I arrive in 40 minutes.
+
+Text READY when you're set.
+
+[[READY -> CORRECT_CODE]]
+
+---
+
+:: APPROACH_DIRECT [SMS]
+
+[SMS]
+Bold choice.
+
+You walk up. You sit. You say the phrase.
+
+Blackbird looks at you for a long moment.
+Then:
+
+"It opens again at midnight."
+
+What do you do?
+
+Reply:
+1 - Ask about the package
+2 - Ask about the Spymaster
+3 - Say nothing. Wait.
+
+[[1 -> ASK_PACKAGE]]
+[[2 -> ASK_SPYMASTER]]
+[[3 -> WAIT_SILENCE]]
+
+---
+
+:: APPROACH_CASUAL [SMS + AUDIO]
+# ASSET: audio/spymaster_warning.mp3
+# Script: "Measured approach. But don't dawdle -- Blackbird is paranoid on a good day. You have one drink's worth of time. Make it count."
+
+[SMS]
+Measured. Good.
+
+While you're at the bar -- a word of caution:
+🎙️ https://imbrettjackson.github.io/spymaster/audio/spymaster_warning.mp3
+
+Then: you approach. You sit. You say the phrase.
+
+Blackbird says: "It opens again at midnight."
+
+What do you do?
+
+Reply:
+1 - Ask about the package
+2 - Ask about the Spymaster
+3 - Say nothing. Wait.
+
+[[1 -> ASK_PACKAGE]]
+[[2 -> ASK_SPYMASTER]]
+[[3 -> WAIT_SILENCE]]
+
+---
+
+:: ASK_PACKAGE [SMS]
+
+[SMS]
+Blackbird slides a small envelope across the bar.
+Doesn't look at you.
+
+"It was never about the package," they say.
+"It was about who ordered it."
+
+A pause.
+
+"Do you know who you're really working for?"
+
+Reply:
+1 - Yes. The Agency.
+2 - I'm beginning to wonder.
+3 - Tell me.
+
+[[1 -> ENDING_AGENCY]]
+[[2 -> ENDING_DOUBT]]
+[[3 -> ENDING_TELL_ME]]
+
+---
+
+:: ASK_SPYMASTER [SMS]
+
+[SMS]
+Blackbird's expression doesn't change.
+
+"The Spymaster General," they say slowly,
+"has been coming to dinner for thirty years.
+
+Always a different city. Always a different host.
+And the host never remembers the morning after."
+
+They stand up.
+
+"Tonight might be different. Depends on you."
+
+Reply:
+1 - Why are you telling me this?
+2 - I won't let that happen.
+3 - What do I do?
+
+[[1 -> ENDING_DOUBT]]
+[[2 -> ENDING_RESIST]]
+[[3 -> ENDING_TELL_ME]]
+
+---
+
+:: WAIT_SILENCE [SMS]
+
+[SMS]
+Smart.
+
+The silence stretches.
+Blackbird relaxes -- almost imperceptibly.
+
+"You're different from the others," they say finally.
+
+They slide something across the bar.
+Not the envelope. A key.
+
+"Room 412. Everything you need is there.
+Go before the Spymaster arrives."
+
+Reply:
+1 - Take the key and go
+2 - Ask what's in the room
+3 - Stay and wait for the Spymaster
+
+[[1 -> ENDING_KEY]]
+[[2 -> ENDING_TELL_ME]]
+[[3 -> ENDING_WAIT_SPYMASTER]]
+
+---
+
+:: ENDING_AGENCY [SMS]
+
+[SMS]
+Blackbird nods once.
+
+"Then you're exactly what they wanted you to be."
+
+They leave.
+
+At 7 PM sharp, a knock at your door.
+You open it.
+
+The Spymaster General smiles.
+
+"Dinner was delicious. I'll see you again next year."
+
+You don't remember what was served.
+
+🏁 MISSION COMPLETE -- OFFICIAL ENDING
+https://imbrettjackson.github.io/spymaster/debrief.html
+
+[[restart -> START]]
+
+---
+
+:: ENDING_DOUBT [SMS]
+
+[SMS]
+Something shifts.
+
+The Spymaster arrives. You're still there -- but changed.
+You say very little. They notice.
+
+"Next time, bring someone who doesn't ask questions."
+
+There is no next time.
+
+🏁 MISSION COMPLETE -- THE DOUBT ENDING
+https://imbrettjackson.github.io/spymaster/debrief.html
+
+[[restart -> START]]
+
+---
+
+:: ENDING_TELL_ME [SMS]
+
+[SMS]
+Blackbird tells you everything.
+
+It takes six minutes.
+
+By the time you look up, they're gone.
+The bar stool is cold.
+
+At 7 PM, the Spymaster arrives.
+You look them in the eye differently now.
+
+Dinner is... illuminating.
+
+🏁 MISSION COMPLETE -- THE INFORMED ENDING
+https://imbrettjackson.github.io/spymaster/debrief.html
+
+[[restart -> START]]
+
+---
+
+:: ENDING_RESIST [SMS]
+
+[SMS]
+You don't let it happen.
+
+When the Spymaster arrives, you're ready.
+The dinner never takes place.
+
+I don't know how you knew.
+Nobody does.
+
+Blackbird sends you a postcard three weeks later.
+It says: "Good."
+
+Nothing else.
+
+🏁 MISSION COMPLETE -- THE RESISTANCE ENDING
+https://imbrettjackson.github.io/spymaster/debrief.html
+
+[[restart -> START]]
+
+---
+
+:: ENDING_KEY [SMS]
+
+[SMS]
+Room 412.
+
+You find what Blackbird left.
+You understand everything.
+
+You're gone before the Spymaster's car arrives.
+
+Somewhere, a phone rings in an empty hotel room.
+
+Nobody answers.
+
+🏁 MISSION COMPLETE -- THE ESCAPE ENDING
+https://imbrettjackson.github.io/spymaster/debrief.html
+
+[[restart -> START]]
+
+---
+
+:: ENDING_WAIT_SPYMASTER [SMS]
+
+[SMS]
+You wait.
+
+7 PM. The door opens.
+
+The Spymaster General sits down across from you.
+Orders something with two ice cubes.
+
+Picks up a newspaper.
+
+Looks at you over the top of it.
+
+"You're still here," they say.
+"Nobody stays."
+
+"...I stayed," you say.
+
+A long pause.
+
+"Then you're the new Blackbird."
+
+🏁 MISSION COMPLETE -- THE FULL CIRCLE ENDING
+https://imbrettjackson.github.io/spymaster/debrief.html
+
+[[restart -> START]]
