@@ -1,6 +1,6 @@
-# Spy-Master General — Resume Here Tomorrow
+# Spy-Master General — Resume Here
 
-## What's Already Done ✅
+## What's Done ✅
 
 | Component | Status |
 |-----------|--------|
@@ -13,56 +13,60 @@
 | Game script | ✅ spy-master-general.twee |
 | Cipher puzzle page | ✅ cipher.html (answer: EGRET, shift 7) |
 | Operator dashboard | ✅ dashboard.html (open locally on phone) |
+| A2P Brand registration | ✅ REGISTERED (Mar 21 2026) |
+| A2P Campaign registration | ✅ SUBMITTED — under review (expect 24-72 hrs, possibly longer) |
 
 ---
 
-## The One Blocker 🚧
+## Remaining Tasks (in order)
 
-**A2P 10DLC registration.** US carriers require local numbers to be registered before delivering SMS. The Twilio function fires correctly (Cloudflare D1 confirms sessions are created on every inbound text) — but outbound replies are silently blocked at the carrier level. This is NOT a code problem.
+### 1 — Wait for A2P Campaign Approval
+You'll get an email from Twilio when the campaign clears.
+Check status any time: https://console.twilio.com/us1/develop/regulatory-compliance/bundles
+Once approved, proceed to step 2.
 
----
+### 2 — Link Phone Number to Messaging Service (5 min, after approval)
+When campaign is approved, Twilio creates a Messaging Service automatically.
+Go to: https://console.twilio.com/us1/develop/messaging/services
+- Open the new Messaging Service (linked to your campaign)
+- Add +17752789325 to the service under "Sender Pool"
+Then update your phone number config to use this Messaging Service:
+https://console.twilio.com/us1/develop/phone-numbers/manage/incoming
+- Click +17752789325 > Messaging Configuration
+- Messaging Service > select the new service > Save
 
-## Tomorrow's Tasks (in order)
-
-### 1 — Enable GitHub Pages (2 min)
+### 3 — Enable GitHub Pages (2 min)
 https://github.com/imbrettjackson/spymaster/settings/pages
 Source: Deploy from branch > main > / (root) > Save
-Cipher page will be live at: https://imbrettjackson.github.io/spymaster/cipher.html
+Cipher page live at: https://imbrettjackson.github.io/spymaster/cipher.html
 
-### 2 — A2P 10DLC Registration (15 min setup, 1-5 days for approval)
-https://console.twilio.com/us1/develop/regulatory-compliance/bundles
-- Business: Live Action Attractions LLC
-- Website: liveactionattractions.com
-- Use case description: "Interactive entertainment game. Players opt in and text a number to receive a branching narrative SMS experience. Low volume, single number, 10-50 messages per session."
-- Once approved: messages deliver with zero other changes needed.
-
-### 3 — Rotate Cloudflare API Token (5 min) ⚠️ SECURITY
+### 4 — Rotate Cloudflare API Token ⚠️ SECURITY
 https://dash.cloudflare.com/profile/api-tokens
-- Delete the token that was shared in chat tonight
+- Delete the token shared in chat on Mar 21
 - Create replacement: Custom Token > D1:Edit > your account
-- Update CF_API_TOKEN in Twilio function env vars, then redeploy
-https://console.twilio.com/us1/develop/functions/services
+- Update CF_API_TOKEN in: https://console.twilio.com/us1/develop/functions/services
+- Redeploy the function after updating
 
-### 4 — Add Two Placeholder Assets (10 min)
+### 5 — Add Two Placeholder Assets (10 min)
 Upload to https://github.com/imbrettjackson/spymaster:
-- images/mission_map.jpg — any overhead map screenshot with YOU + BLACKBIRD labels
-- audio/spymaster_warning.mp3 — 15 sec. Script: "Measured approach. But don't dawdle — Blackbird is paranoid on a good day. You have one drink's worth of time. Make it count."
+- images/mission_map.jpg — overhead map screenshot, label YOU + BLACKBIRD
+- audio/spymaster_warning.mp3 — 15 sec recording. Script: "Measured approach. But don't dawdle — Blackbird is paranoid on a good day. You have one drink's worth of time. Make it count."
 
-### 5 — Test Once A2P Clears
-Text anything to +1 (775) 278-9325 from your personal number.
-Expected: "An unknown number. How refreshing. I was told to expect someone..."
+### 6 — Test
+Text anything to +1 (775) 278-9325 from +1 (323) 929-7425.
+Expected reply: "An unknown number. How refreshing. I was told to expect someone. Are you the one they sent?"
 
 ---
 
 ## Credentials
-All credentials are in the Twilio console and Cloudflare dashboard — not stored here for security.
-Cipher answer: EGRET (shift 7 on encoded word XZKXM)
+All credentials are in the Twilio and Cloudflare dashboards — not stored here for security.
+Cipher answer: EGRET (shift 7, encoded word XZKXM)
 
 ---
 
-## Optional Future Upgrades
-- [ ] Real Spymaster voice recording for the audio beat
-- [ ] Annotated map image for mission brief MMS
+## Optional Upgrades
+- [ ] Real Spymaster voice recording for audio beat
+- [ ] Real annotated map image for mission brief MMS
 - [ ] Expand Twine script with more branches
-- [ ] Twilio auto-recharge to prevent future suspension
+- [ ] Enable Twilio auto-recharge to prevent future suspension
 - [ ] Build out debrief.html end-of-game page
